@@ -24,8 +24,8 @@ namespace Final_Pr
                 while (true)
                 {
                     Console.Clear();
-                    Console.WriteLine("1 - Фильмы,\n2 - Актеры,\n3 - Отзывы,\n0 - выход.");
-                    Console.Write("Введите: ");
+                    Console.WriteLine("1 - Movies,\n2 - Actors,\n3 - Reviews,\n0 - Exit.");
+                    Console.Write("Enter: ");
                     string inp = Console.ReadLine();
 
                     if (int.TryParse(inp, out choice))
@@ -33,12 +33,12 @@ namespace Final_Pr
                         if (choice >= 0 && choice <= 3)
                             break;
                         else
-                            Console.WriteLine("Ошибка! Введите число от 0 до 3.");
+                            Console.WriteLine("Error! Enter a number from 0 to 3.");
                         menu.ReadKey();
                     }
                     else
                     {
-                        Console.WriteLine("Ошибка ввода! Введите число.");
+                        Console.WriteLine("Input error! Please enter a number.");
                         menu.ReadKey();
                     }
                 }
@@ -69,14 +69,14 @@ namespace Final_Pr
                 while (true)
                 {
                     Console.Clear();
-                    Console.WriteLine("1 - Показать все фильмы,\n2 - Добавить фильм,\n3 - Удалить фильм,\n4 - Изменить фильм,\n5 - Поиск фильма(по параметрам),\n6 - Статистика фильмов,\n7 - Другое,\n0 - выход.");
-                    choice = menu.EnterInt("Введите: ");
+                    Console.WriteLine("1 - Show all movies,\n2 - Add movie,\n3 - Remove movie,\n4 - Update movie,\n5 - Search movie (by parameters),\n6 - Movie statistics,\n7 - Other,\n0 - Exit.");
+                    choice = menu.EnterInt("Enter: ");
 
                     if (choice >= 0 && choice <= 7)
                         break;
                     else
                     {
-                        Console.WriteLine("Ошибка! Введите число от 0 до 7.");
+                        Console.WriteLine("Error! Enter a number from 0 to 7.");
                         menu.ReadKey();
                     }
                 }
@@ -118,14 +118,14 @@ namespace Final_Pr
                 while (true)
                 {
                     Console.Clear();
-                    Console.WriteLine("1 - Показать всех актеров,\n2 - Добавить актера,\n3 - Удалить актера,\n4 - Изменить данные актера,\n5 - Актеры / Роли,\n6 - Другое,\n0 - выход.");  
-                    choice = menu.EnterInt("Введите: ");
+                    Console.WriteLine("1 - Show all actors,\n2 - Add actor,\n3 - Remove actor,\n4 - Update actor,\n5 - Actors / Roles,\n6 - Other,\n0 - Exit.");
+                    choice = menu.EnterInt("Enter: ");
 
                     if (choice >= 0 && choice <= 6)
                         break;
                     else
                     {
-                        Console.WriteLine("Ошибка! Введите число от 0 до 6.");
+                        Console.WriteLine("Error! Enter a number from 0 to 6.");
                         menu.ReadKey();
                     }
                 }
@@ -164,14 +164,14 @@ namespace Final_Pr
                 while (true)
                 {
                     Console.Clear();
-                    Console.WriteLine("1 - Показать отзывы к фильму,\n2 - Добавить отзыв,\n3 - Удалить отзыв,\n4 - Изменить отзыв,\n0 - выход.");
-                    choice = menu.EnterInt("Введите: ");
+                    Console.WriteLine("1 - Show reviews for a movie,\n2 - Add review,\n3 - Remove review,\n4 - Update review,\n0 - Exit.");
+                    choice = menu.EnterInt("Enter: ");
 
                     if (choice >= 0 && choice <= 4)
                         break;
                     else
                     {
-                        Console.WriteLine("Ошибка! Введите число от 0 до 4.");
+                        Console.WriteLine("Error! Enter a number from 0 to 4.");
                         menu.ReadKey();
                     }
                 }               

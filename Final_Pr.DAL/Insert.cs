@@ -256,7 +256,7 @@ namespace Final_Pr.DAL
                 }
             }
 
-            Console.WriteLine("Все данные успешно записаны в базу!");
+            Console.WriteLine("All data has been successfully saved to the database!");
 
         }
     }

@@ -13,7 +13,7 @@ namespace Final_Pr
 
         public void ReadKey()
         {
-            Console.WriteLine("\nНажмите любую клавишу, чтобы продолжить...");
+            Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
         public string EnterString(string text)
@@ -25,7 +25,7 @@ namespace Final_Pr
                 if (!string.IsNullOrWhiteSpace(input))
                     return input;
 
-                Console.WriteLine("Ошибка! Поле не может быть пустым.");
+                Console.WriteLine("Error! Field cannot be empty.");
             }
         }
         public int EnterInt(string text)
@@ -36,7 +36,7 @@ namespace Final_Pr
                 if (int.TryParse(Console.ReadLine(), out int num))
                     return num;
 
-                Console.WriteLine("Ошибка! Введите число.");
+                Console.WriteLine("Error! Enter a number.");
             }
         }
         private DateTime EnterDate(string text)
@@ -47,59 +47,59 @@ namespace Final_Pr
                 if (DateTime.TryParse(input, out DateTime date))
                     return date;
 
-                Console.WriteLine("Ошибка! Введите корректную дату.");
+                Console.WriteLine("Error! Enter a valid date.");
             }
         }
         private string EnterRoleType()
         {
             while (true)
             {
-                string type = EnterString("Тип роли (main/supporting): ").ToLower();
+                string type = EnterString("Role type (main/supporting): ").ToLower();
                 if (type == "main" || type == "supporting")
                     return type;
-                Console.WriteLine("Ошибка! Введите только 'main' или 'supporting'.");
+                Console.WriteLine("Error! Enter only 'main' or 'supporting'.");
             }
         }
 
-        //1.1 - Показать все фильмы
+        //1.1 - Show all films
         public void PrintFilms(Film f)
         {
             if (f == null)
             {
-                Console.WriteLine("Фильм не найден.");
+                Console.WriteLine("Film not found.");
                 return;
             }
 
-            Console.WriteLine($"Id: {f.Id}, Название: {f.Title}, Год выпуска: {f.Year}, Страна: {f.Country}");           
+            Console.WriteLine($"Id: {f.Id}, Title: {f.Title}, Year: {f.Year}, Country: {f.Country}");
         }
         public void PrintRoles(Film f)
         {
             if (f.Roles != null && f.Roles.Count > 0)
             {
-                Console.WriteLine("Роли и актёры:");
+                Console.WriteLine("Roles and actors:");
                 foreach (var r in f.Roles)
                 {
-                    Console.WriteLine($" - Персонаж: {r.Character}, Тип роли: {r.Type}, Актёр: {r.Actor?.FullName}");
+                    Console.WriteLine($" - Character: {r.Character}, Role type: {r.Type}, Actor: {r.Actor?.FullName}");
                 }
             }
             else
             {
-                Console.WriteLine("Ролей не найдено.");
+                Console.WriteLine("No roles found.");
             }
         }
         public void PrintReviews(Film f)
         {
             if (f.Reviews != null && f.Reviews.Count > 0)
             {
-                Console.WriteLine("Отзывы:");
+                Console.WriteLine("Reviews:");
                 foreach (var r in f.Reviews)
                 {
-                    Console.WriteLine($" - Пользователь: {r.User?.Name}, Оценка: {r.Rating}/10, Комментарий: {r.Comment}, Дата: {r.Date.ToShortDateString()} ");
+                    Console.WriteLine($" - User: {r.User?.Name}, Rating: {r.Rating}/10, Comment: {r.Comment}, Date: {r.Date.ToShortDateString()} ");
                 }
             }
             else
             {
-                Console.WriteLine("Отзывов пока нет.");
+                Console.WriteLine("No reviews found.");
             }
         }
         public void PrintFilmFull(Film f)
@@ -114,10 +114,10 @@ namespace Final_Pr
             var films = rep.GetAllFilms();
 
             if (films.Count == 0)
-                Console.WriteLine("Фильмов нет в базе.");
+                Console.WriteLine("No films found in the database.");
             else
             {
-                Console.WriteLine("Список всех фильмов:");
+                Console.WriteLine("List of all films:");
                 foreach (var f in films)
                 {
                     PrintFilmFull(f);
@@ -127,20 +127,20 @@ namespace Final_Pr
             ReadKey();
         }
 
-        //1.2 - Добавить фильм
+        //1.2 - Add film
         public void Menu_AddFilm(Repository repo)
         {
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("   --- Добавление фильма ---");
-                string exit = EnterString("Выйти? (y/n): ").ToLower();
+                Console.WriteLine("   --- Add Film ---");
+                string exit = EnterString("Exit? (y/n): ").ToLower();
                 if (exit == "y") break;
 
                 var film = AddFilmWithoutRoles(repo);
                 if (film == null) continue; 
 
-                string ans = EnterString("Хотите добавить роли и актёров? (y/n): ").ToLower();
+                string ans = EnterString("Do you want to add roles and actors? (y/n): ").ToLower();
                 if (ans == "y")
                 {
                     Menu_Add_Role_Actor(repo, ans, film);
@@ -151,13 +151,13 @@ namespace Final_Pr
         }
         private Film AddFilmWithoutRoles(Repository repo)
         {
-            string title = EnterString("Введите название фильма: ");
-            int year = EnterInt("Введите год выпуска: ");
-            string country = EnterString("Введите страну: ");
+            string title = EnterString("Enter film title: ");
+            int year = EnterInt("Enter release year: ");
+            string country = EnterString("Enter country: ");
 
             if (repo.GetAllFilms().Any(f => f.Title == title && f.Year == year))
             {
-                Console.WriteLine("Такой фильм уже есть в базе.");
+                Console.WriteLine("Such a film already exists in the database.");
                 return null;
             }
 
@@ -168,7 +168,7 @@ namespace Final_Pr
                 Country = country
             });
 
-            Console.WriteLine("Фильм успешно добавлен!");
+            Console.WriteLine("Film successfully added!");
             return film;
         }
         public void Menu_Add_Role_Actor(Repository repo, string ans, Film film)
@@ -176,17 +176,17 @@ namespace Final_Pr
             while (ans == "y")
             {
                 AddRoleToFilm(repo, film);
-                ans = EnterString("Добавить ещё одну роль? (y/n): ").ToLower();
+                ans = EnterString("Add another role? (y/n): ").ToLower();
             }
         }
         private void AddRoleToFilm(Repository repo, Film film)
         {
-            Console.WriteLine("\n--- Добавление роли к фильму ---");
-            string character = EnterString("Имя персонажа: ");
+            Console.WriteLine("\n--- Add Role to Film ---");
+            string character = EnterString("Character name: ");
             string type = EnterRoleType();
 
             Actor actor = null;
-            string linkActor = EnterString("Хотите связать роль с актёром? (y/n): ").ToLower();
+            string linkActor = EnterString("Do you want to link the role with an actor? (y/n): ").ToLower();
             if (linkActor == "y")
                 actor = EnterOrSelectActor(repo);
 
@@ -198,23 +198,23 @@ namespace Final_Pr
                 ActorId = actor?.Id
             });
 
-            Console.WriteLine("Роль успешно добавлена!");
+            Console.WriteLine("Role successfully added!");
         }
         private Actor EnterOrSelectActor(Repository repo)
         {
-            string exists = EnterString("Актёр уже существует? (y/n): ").ToLower();
+            string exists = EnterString("Does the actor already exist? (y/n): ").ToLower();
             Actor actor = null;
 
             if (exists == "y")
             {
-                string fullName = EnterString("ФИО актёра: ");
-                string country = EnterString("Страна актёра: ");
-                DateTime birth = EnterDate("Дата рождения (дд.мм.гггг): ");
+                string fullName = EnterString("Actor's full name: ");
+                string country = EnterString("Actor's country: ");
+                DateTime birth = EnterDate("Actor's birth date (dd.mm.yyyy): ");
 
                 actor = repo.GetActorByDetails(fullName, country, birth);
                 if (actor == null)
                 {
-                    Console.WriteLine("Актёр не найден, создаём нового...");
+                    Console.WriteLine("Actor not found, creating a new one...");
                     actor = repo.AddActor(new Actor
                     {
                         FullName = fullName,
@@ -225,9 +225,9 @@ namespace Final_Pr
             }
             else
             {
-                string full = EnterString("ФИО актёра: ");
-                DateTime birth = EnterDate("Дата рождения (дд.мм.гггг): ");
-                string country = EnterString("Страна актёра: ");
+                string full = EnterString("Actor's full name: ");
+                DateTime birth = EnterDate("Actor's birth date (dd.mm.yyyy): ");
+                string country = EnterString("Actor's country: ");
 
                 actor = repo.AddActor(new Actor
                 {
@@ -247,32 +247,32 @@ namespace Final_Pr
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("   --- Удаление фильма ---");
-                string choice = EnterString("Выйти? (y/n): ");
+                Console.WriteLine("   --- Delete movie ---");
+                string choice = EnterString("Exit? (y/n): ");
                 if (choice == "y") break;
 
-                string title = EnterString("Введите название фильма: ");              
-                int year = EnterInt("Введите год выпуска: ");
+                string title = EnterString("Enter movie title: ");
+                int year = EnterInt("Enter release year: ");
 
                 var film = repo.GetAllFilms().FirstOrDefault(t => t.Title == title && t.Year == year);
 
                 if (film == null)
                 {
-                    Console.WriteLine("Фильм не найден.");
+                    Console.WriteLine("Film not found.");
                     ReadKey();
                     continue;
                 }
 
                 PrintFilms(film);
-                string ans = EnterString("Удалить? (y/n): ").ToLower();
+                string ans = EnterString("Delete? (y/n): ").ToLower();
                 if (ans == "y")
                 {
                     repo.RemoveFilm(film.Id);
-                    Console.WriteLine("Фильм удалён!");
+                    Console.WriteLine("Film deleted!");
                 }
                 else
                 {
-                    Console.WriteLine("Удаление отменено.");
+                    Console.WriteLine("Deletion canceled.");
                 }
                 ReadKey();
             }
@@ -283,34 +283,34 @@ namespace Final_Pr
         {
             Console.Clear();
 
-            Console.WriteLine("   --- Изменение данных фильма ---");
-            string title = EnterString("Введите название фильма: ");
-            int year = EnterInt("Введите год выпуска: ");
+            Console.WriteLine("   --- Update movie data ---");
+            string title = EnterString("Enter movie title: ");
+            int year = EnterInt("Enter release year: ");
 
 
             var film = repo.GetAllFilms().FirstOrDefault(t => t.Title == title && t.Year == year);
 
             if (film == null)
             {
-                Console.WriteLine("Фильм не найден.");
+                Console.WriteLine("Film not found.");
                 ReadKey();
                 return;
             }
-            Console.WriteLine("Текущие данные:");
+            Console.WriteLine("Current data:");
             PrintFilmFull(film);
             while (true)
-            {             
-                Console.WriteLine("\nЧто хотите изменить?");
-                Console.WriteLine("1 - Название\n2 - Год выпуска\n3 - Страну\n4 - Роли\n5 - Актеров\n0 - Выход");
-                int choice = EnterInt("Введите: ");
+            {
+                Console.WriteLine("\nWhat do you want to change?");
+                Console.WriteLine("1 - Title\n2 - Release Year\n3 - Country\n4 - Roles\n5 - Actors\n0 - Exit");
+                int choice = EnterInt("Enter: ");
                 if (choice == 0)
                     break;
 
                 UpdateFilmSwitch(film, choice, repo);
                 repo.UpdateFilm(film);
                 Console.Clear();
-                Console.WriteLine("Изменение выполнено!");
-                Console.WriteLine(" Обновленный фильм:");
+                Console.WriteLine("Update completed!");
+                Console.WriteLine(" Updated movie:");
                 PrintFilmFull(film);
             }
         }
@@ -318,14 +318,15 @@ namespace Final_Pr
         {
             switch (choice)
             {
-                case 1: film.Title = EnterString("Новое название: "); break;
-                case 2: film.Year = EnterInt("Новый год выпуска: "); break;
-                case 3: film.Country = EnterString("Новая страна: "); ; break;
+                case 1: film.Title = EnterString("New title: "); break;
+                case 2: film.Year = EnterInt("New release year: "); break;
+                case 3: film.Country = EnterString("New country: "); break;
+
                 case 4:
-                    Console.WriteLine("   --- Изменение ролей ---");
+                    Console.WriteLine("   --- Editing roles ---");
                     PrintRoles(film);
 
-                    string delAll = EnterString("Хотите удалить все роли? (y/n): ").ToLower();
+                    string delAll = EnterString("Do you want to delete all roles? (y/n): ").ToLower();
                     if (delAll == "y")
                     {
                         foreach (var r in film.Roles.ToList())
@@ -333,60 +334,66 @@ namespace Final_Pr
                             repo.RemoveRole(r.Id);
                         }
                         film.Roles.Clear();
-                        Console.WriteLine("Все роли удалены!");
+                        Console.WriteLine("All roles have been deleted!");
                     }
                     else
                     {
-                        string delSome = EnterString("Хотите удалить конкретные роли? (y/n): ").ToLower();
+                        string delSome = EnterString("Do you want to delete specific roles? (y/n): ").ToLower();
                         if (delSome == "y")
                         {
                             while (true)
                             {
-                                int roleIdd = EnterInt("Введите Id роли для удаления (0 для выхода): ");
+                                int roleIdd = EnterInt("Enter role Id to delete (0 to exit): ");
                                 if (roleIdd == 0) break;
                                 repo.RemoveRole(roleIdd);
+
                                 var roleToRemove = film.Roles.FirstOrDefault(r => r.Id == roleIdd);
                                 if (roleToRemove != null) film.Roles.Remove(roleToRemove);
                             }
                         }
                     }
 
-                    string addRoles = EnterString("Хотите добавить новые роли? (y/n): ").ToLower();
+                    string addRoles = EnterString("Do you want to add new roles? (y/n): ").ToLower();
                     while (addRoles == "y")
                     {
                         AddRoleToFilm(repo, film);
-                        addRoles = EnterString("Добавить ещё одну роль? (y/n): ").ToLower();
+                        addRoles = EnterString("Add another role? (y/n): ").ToLower();
                     }
                     break;
+
                 case 5:
-                    Console.WriteLine("   --- Изменение актеров ---");
+                    Console.WriteLine("   --- Editing actors ---");
                     PrintRoles(film);
-                    int roleId = EnterInt("Введите Id роли, для которой хотите изменить актёра: ");
+
+                    int roleId = EnterInt("Enter role Id to change actor: ");
                     var role = film.Roles.FirstOrDefault(r => r.Id == roleId);
 
                     if (role == null)
                     {
-                        Console.WriteLine("Роль не найдена!");
+                        Console.WriteLine("Role not found!");
                         break;
                     }
 
                     Actor NewActor = EnterOrSelectActor(repo);
                     repo.UpdateRoleActor(role.Id, NewActor);
-                    Console.WriteLine("Актёр роли обновлён!");
+                    Console.WriteLine("Role actor updated!");
                     break;
-                default: Console.WriteLine("Ошибка!"); break;
+
+                default:
+                    Console.WriteLine("Error!");
+                    break;
             }
         }
 
 
-        //1.5 - Поиск фильма по параметрам
+        //1.5 - Search movie by parameters
         public void Menu_SearchFilm(Repository repo)
         {
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Поиск по:\n1 - Названию\n2 - Стране\n3 - Году\n4 - Актеру\n0 - Выход");
-                int choice = EnterInt("Введите: ");
+                Console.WriteLine("Search by:\n1 - Title\n2 - Country\n3 - Year\n4 - Actor\n0 - Exit");
+                int choice = EnterInt("Enter: ");
                 if (choice == 0) return;
                 SearchFilmSwitch(repo.GetAllFilms(), choice);
             }
@@ -398,22 +405,22 @@ namespace Final_Pr
             switch (choice)
             {
                 case 1:
-                    var title = EnterString("Название: ");
+                    var title = EnterString("Title: ");
                     films = AllFilms.Where(t => t.Title == title).ToList();                
                     break;
                 case 2:
-                    var country = EnterString("Страна: ");
+                    var country = EnterString("Country: ");
                     films = AllFilms.Where(t => t.Country == country).ToList();
                     break;
                 case 3:
-                    var year = EnterInt("Год: ");
+                    var year = EnterInt("Year: ");
                     films = AllFilms.Where(t => t.Year == year).ToList();
                     break;
                 case 4:
-                    var actor = EnterString("Актер: ");
+                    var actor = EnterString("Actor: ");
                     films = AllFilms.Where(f => f.Roles != null && f.Roles.Any(r => r.Actor != null && r.Actor.FullName == actor)).ToList();
                     break;
-                default: Console.WriteLine("Ошибка!"); break;
+                default: Console.WriteLine("Error!"); break;
             }
             if (films != null && films.Count > 0)
             {
@@ -425,7 +432,7 @@ namespace Final_Pr
             }
             else
             {
-                Console.WriteLine("Фильмы не найдены.");
+                Console.WriteLine("Films not found.");
             }
             ReadKey();
         }
@@ -439,7 +446,7 @@ namespace Final_Pr
 
             if (films.Count == 0)
             {
-                Console.WriteLine("Фильмов нет в базе.");
+                Console.WriteLine("No films found.");
                 ReadKey();
                 return;
             }
@@ -447,9 +454,9 @@ namespace Final_Pr
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("--- Статистика фильмов ---");
-                Console.WriteLine("1 - Средний рейтинг по фильмам,\n2 - Топ-5 фильмов по средней оценке,\n3 - Фильм с найбольшим рейтингом,\n4 - Фильм с найменшим рейтингом,\n5 - Количество фильмов по странам,\n6 - Количество фильмов по годам,\n0 - Выход");
-                int choice = EnterInt("Выберите опцию: ");
+                Console.WriteLine("--- Film Statistics ---");
+                Console.WriteLine("1 - Average rating by films,\n2 - Top-5 films by average rating,\n3 - Film with highest rating,\n4 - Film with lowest rating,\n5 - Number of films by countries,\n6 - Number of films by years,\n0 - Exit");
+                int choice = EnterInt("Select option: ");
                 if (choice == 0)
                     break;
                 Menu_StatsFilmSwich(choice, repo, films);
@@ -462,18 +469,18 @@ namespace Final_Pr
             switch (choice)
             {
                 case 1:
-                    Console.WriteLine("Средний рейтинг по фильмам:");
+                    Console.WriteLine("Average rating by films:");
                     foreach (var f in films)
                     {
                         if (f.Reviews != null && f.Reviews.Count > 0)
                             Console.WriteLine($"{f.Title} ({f.Year}): {f.Reviews.Average(r => r.Rating)}/10");
                         else
-                            Console.WriteLine($"{f.Title} ({f.Year}): Нет отзывов");
+                            Console.WriteLine($"{f.Title} ({f.Year}): No reviews");
                     }
                     break;
 
                 case 2:
-                    Console.WriteLine("Топ-5 фильмов по средней оценке:");
+                    Console.WriteLine("Top-5 films by average rating:");
                     var top5 = films.Where(f => f.Reviews != null && f.Reviews.Count > 0).OrderByDescending(f => f.Reviews.Average(r => r.Rating)).Take(5);
                     int rank = 1;
                     foreach (var f in top5)
@@ -485,19 +492,19 @@ namespace Final_Pr
                 case 3:
                     var bestFilm = films.Where(f => f.Reviews != null && f.Reviews.Count > 0).OrderByDescending(f => f.Reviews.Average(r => r.Rating)).FirstOrDefault();
                     if (bestFilm != null)
-                        Console.WriteLine($"Фильм с наибольшим рейтингом: {bestFilm.Title} ({bestFilm.Year}) - {bestFilm.Reviews.Average(r => r.Rating)}/10");
+                        Console.WriteLine($"Film with highest rating: {bestFilm.Title} ({bestFilm.Year}) - {bestFilm.Reviews.Average(r => r.Rating)}/10");
                     else
-                        Console.WriteLine("Нет фильмов с отзывами.");
+                        Console.WriteLine("No films with reviews.");
                     break;
                 case 4:
                     var worstFilm = films.Where(f => f.Reviews != null && f.Reviews.Count > 0).OrderBy(f => f.Reviews.Average(r => r.Rating)).FirstOrDefault();
                     if (worstFilm != null)
-                        Console.WriteLine($"Фильм с наименьшим рейтингом: {worstFilm.Title} ({worstFilm.Year}) - {worstFilm.Reviews.Average(r => r.Rating)}/10");
+                        Console.WriteLine($"Film with lowest rating: {worstFilm.Title} ({worstFilm.Year}) - {worstFilm.Reviews.Average(r => r.Rating)}/10");
                     else
-                        Console.WriteLine("Нет фильмов с отзывами.");
+                        Console.WriteLine("No films with reviews.");
                     break;
                 case 5:
-                    Console.WriteLine("Количество фильмов по странам:");
+                    Console.WriteLine("Number of films by countries:");
                     
                     Dictionary<string, int> countryCount = new Dictionary<string, int>();
 
@@ -516,7 +523,7 @@ namespace Final_Pr
                     break;
 
                 case 6:
-                    Console.WriteLine("Количество фильмов по годам:");
+                    Console.WriteLine("Number of films by years:");
 
                     Dictionary<int, int> yearCount = new Dictionary<int, int>();
                     foreach (var f in films)
@@ -534,7 +541,7 @@ namespace Final_Pr
                     break;
 
                 default:
-                    Console.WriteLine("Ошибка! Выберите корректный пункт.");
+                    Console.WriteLine("Error! Please select a valid option.");
                     break;
             }
         }
@@ -547,7 +554,7 @@ namespace Final_Pr
 
             if (films.Count == 0)
             {
-                Console.WriteLine("Фильмов нет в базе.");
+                Console.WriteLine("No films in the database.");
                 ReadKey();
                 return;
             }
@@ -555,9 +562,9 @@ namespace Final_Pr
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("--- Другое ---");
-                Console.WriteLine("1 - Случайный фильм,\n2 - Фильмы без отзывов,\n3 - Количество ролей на фильм,\n0 - Выход");
-                int choice = EnterInt("Выберите опцию: ");
+                Console.WriteLine("--- Other ---");
+                Console.WriteLine("1 - Random film,\n2 - Films without reviews,\n3 - Number of roles per film,\n0 - Exit");
+                int choice = EnterInt("Select an option: ");
                 if (choice == 0)
                     break;
                 Menu_OtherSwitch(choice, films, repo);
@@ -570,7 +577,7 @@ namespace Final_Pr
                 case 1:                 
                     Random rnd = new Random();
                     var film = films[rnd.Next(films.Count)];
-                    Console.WriteLine("Случайный фильм:");
+                    Console.WriteLine("Random film:");
                     PrintFilms(film);
                     break;
 
@@ -585,11 +592,11 @@ namespace Final_Pr
 
                     if (noReviews.Count == 0)
                     {
-                        Console.WriteLine("Все фильмы имеют отзывы.");
+                        Console.WriteLine("No films without reviews.");
                         return;
                     }
 
-                    Console.WriteLine("Фильмы без отзывов:");
+                    Console.WriteLine("Films without reviews:");
                     foreach (var f in noReviews)
                     {
                         PrintFilms(f);
@@ -597,20 +604,20 @@ namespace Final_Pr
                     break;
 
                 case 3:
-                    Console.WriteLine("Количество ролей на фильм:");
+                    Console.WriteLine("Number of roles per film:");
                     foreach (var f in films)
                     {
                         int count = 0;
                         if (f.Roles != null)
                         {
                             count = f.Roles.Count;
-                        }                            
-                        Console.WriteLine($"{f.Title} ({f.Year}): {count} ролей");
+                        }
+                        Console.WriteLine($"{f.Title} ({f.Year}): {count} roles");
                     }
                     break;
 
                 default:
-                    Console.WriteLine("Ошибка! Выберите корректный пункт.");
+                    Console.WriteLine("Error! Please select a valid option.");
                     break;
             }
             ReadKey();
@@ -624,11 +631,11 @@ namespace Final_Pr
             var actors = repo.GetAllActors();
             if (actors.Count == 0)
             {
-                Console.WriteLine("Актёров нет в базе.");
+                Console.WriteLine("No actors in the database.");
             }
             else
             {
-                Console.WriteLine("Список всех актёров:");
+                Console.WriteLine("List of all actors:");
                 foreach (var actor in actors)
                 {
                     PrintActor(actor);
@@ -638,42 +645,42 @@ namespace Final_Pr
         }
         private void PrintActor(Actor actor)
         {
-            Console.WriteLine($"Id: {actor.Id}, ФИО: {actor.FullName}, Страна: {actor.Country}, Дата рождения: {actor.BirthDate.ToShortDateString()}");
+            Console.WriteLine($"Id: {actor.Id}, Full Name: {actor.FullName}, Country: {actor.Country}, Birth Date: {actor.BirthDate.ToShortDateString()}");
 
             if (actor.Roles != null && actor.Roles.Count > 0)
             {
-                Console.WriteLine("Роли в фильмах:");
+                Console.WriteLine("Roles in films:");
                 foreach (var role in actor.Roles)
                 {
-                    Console.WriteLine($" - {role.Character} ({role.Type}) в фильме '{role.Film.Title}'");
+                    Console.WriteLine($" - {role.Character} ({role.Type}) in film '{role.Film.Title}'");
                 }
             }
             else
             {
-                Console.WriteLine("Роли не найдены.");
+                Console.WriteLine("No roles found.");
             }
             Console.WriteLine(""); 
         }
-        
 
-        //2.2 - Добавление актера
+
+        //2.2 - Adding an actor
         public void Menu_AddActor(Repository repo)
         {
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("   --- Добавление нового актёра ---");
-                if (EnterString("Выйти? (y/n): ").ToLower() == "y") break;
+                Console.WriteLine("   --- Adding a new actor ---");
+                if (EnterString("Exit? (y/n): ").ToLower() == "y") break;
 
-                string fullName = EnterString("ФИО актёра: ");
-                string country = EnterString("Страна: ");
-                DateTime birth = EnterDate("Дата рождения (дд.мм.гггг): ");
+                string fullName = EnterString("Full Name: ");
+                string country = EnterString("Country: ");
+                DateTime birth = EnterDate("Birth Date (dd.mm.yyyy): ");
 
                 var Actor = repo.GetActorByDetails(fullName, country, birth);
                 Actor actor;
                 if (Actor != null)
                 {
-                    Console.WriteLine("Такой актёр уже существует.");
+                    Console.WriteLine("Such actor already exists.");
                     actor = Actor;
                 }
                 else
@@ -684,14 +691,14 @@ namespace Final_Pr
                         Country = country,
                         BirthDate = birth
                     });
-                    Console.WriteLine("Актёр успешно добавлен!");
+                    Console.WriteLine("Actor successfully added!");
                 }
 
-                string addRoles = EnterString("Хотите добавить роли этому актёру? (y/n): ").ToLower();
+                string addRoles = EnterString("Do you want to add roles to this actor? (y/n): ").ToLower();
                 while (addRoles == "y")
                 {
                     AddRoleToActor(repo, actor);
-                    addRoles = EnterString("Добавить ещё одну роль? (y/n): ").ToLower();
+                    addRoles = EnterString("Add another role? (y/n): ").ToLower();
                 }
 
                 ReadKey();
@@ -699,18 +706,18 @@ namespace Final_Pr
         }
         private void AddRoleToActor(Repository repo, Actor actor)
         {
-            Console.WriteLine("\n--- Добавление роли актёру ---");
-            string character = EnterString("Имя персонажа: ");
+            Console.WriteLine("\n--- Adding a role to the actor ---");
+            string character = EnterString("Character Name: ");
             string type = EnterRoleType();
 
-            string filmTitle = EnterString("Название фильма: ");
-            int filmYear = EnterInt("Год выпуска фильма: ");
+            string filmTitle = EnterString("Film Title: ");
+            int filmYear = EnterInt("Film Release Year: ");
             Film film = repo.GetAllFilms().FirstOrDefault(f => f.Title == filmTitle && f.Year == filmYear);
 
             if (film == null)
             {
-                Console.WriteLine("Фильма нет в базе.");
-                string addNew = EnterString("Хотите добавить новый фильм? (y/n): ").ToLower();
+                Console.WriteLine("Film not found in the database.");
+                string addNew = EnterString("Do you want to add a new film? (y/n): ").ToLower();
                 if (addNew == "y")
                 {
                     var newFilm = AddFilmWithoutRoles(repo); 
@@ -740,7 +747,7 @@ namespace Final_Pr
 
             if (roleExists)
             {
-                Console.WriteLine("Такая роль уже существует для этого актёра в указанном фильме.");
+                Console.WriteLine("Such role already exists for this actor in the specified film.");
                 return;
             }
 
@@ -758,7 +765,7 @@ namespace Final_Pr
             }
             if (takenRole != null)
             {
-                Console.WriteLine("Данная роль уже занята другим актёром!");
+                Console.WriteLine("Such role is already taken by another actor!");
                 return;
             }
 
@@ -779,7 +786,7 @@ namespace Final_Pr
             {
                 existingRole.ActorId = actor.Id;
                 repo.UpdateRoleActor(existingRole.Id, actor);
-                Console.WriteLine("Роль уже существует, актёр был связан с этой ролью.");
+                Console.WriteLine("Such role already exists, and the actor has been linked to this role.");
                 return;
             }
 
@@ -791,7 +798,7 @@ namespace Final_Pr
                 ActorId = actor.Id
             });
 
-            Console.WriteLine("Роль успешно добавлена!");
+            Console.WriteLine("Role successfully added!");
         }
 
 
@@ -799,40 +806,40 @@ namespace Final_Pr
         public void Menu_RemoveActor(Repository repo)
         {
             Console.Clear();
-            Console.WriteLine("   --- Удаление актёра ---");
+            Console.WriteLine("   --- Deleting actor ---");
 
-            string fullName = EnterString("ФИО актёра: ");
-            string country = EnterString("Страна актёра: ");
-            DateTime birth = EnterDate("Дата рождения (дд.мм.гггг): ");
+            string fullName = EnterString("Actor Full Name: ");
+            string country = EnterString("Actor Country: ");
+            DateTime birth = EnterDate("Actor Birth Date (dd.mm.yyyy): ");
 
             var actor = repo.GetActorByDetails(fullName, country, birth);
             if (actor == null)
             {
-                Console.WriteLine("Актёр не найден!");
+                Console.WriteLine("Actor not found!");
                 ReadKey();
                 return;
             }
 
             var roles = repo.GetRolesByActor(actor.Id);
 
-            string deleteRoles = EnterString("Удалить ВСЕ роли актёра? (y/n): ").ToLower();
+            string deleteRoles = EnterString("Delete all roles of the actor? (y/n): ").ToLower();
             if (deleteRoles == "y")
             {
                 foreach (var role in roles)
                     repo.RemoveRole(role.Id);
 
-                Console.WriteLine("Все роли актёра удалены!");
+                Console.WriteLine("All roles of the actor have been deleted!");
             }
             else
             {
                 foreach (var role in roles)
                     repo.UpdateRoleActor(role.Id, null);
 
-                Console.WriteLine("Актёр был отвязан от всех ролей.");
+                Console.WriteLine("Actor has been unlinked from all roles.");
             }
 
             repo.RemoveActor(actor.Id);
-            Console.WriteLine("Актёр полностью удалён!");
+            Console.WriteLine("Actor has been completely removed!");
 
             ReadKey();
         }
@@ -842,36 +849,36 @@ namespace Final_Pr
         public void Menu_UpdateActor(Repository repo)
         {
             Console.Clear();
-            Console.WriteLine("   --- Изменение данных актёра ---");
+            Console.WriteLine("   --- Updating actor data ---");
 
-            string fullName = EnterString("Введите ФИО актёра: ");
-            string country = EnterString("Введите страну: ");
-            DateTime birth = EnterDate("Введите дату рождения (дд.мм.гггг): ");
+            string fullName = EnterString("Enter actor's full name: ");
+            string country = EnterString("Enter country: ");
+            DateTime birth = EnterDate("Enter birth date (dd.mm.yyyy): ");
 
             var actor = repo.GetActorByDetails(fullName, country, birth);
 
             if (actor == null)
             {
-                Console.WriteLine("Актёр не найден!");
+                Console.WriteLine("Actor not found!");
                 ReadKey();
                 return;
             }
 
-            Console.WriteLine("Текущие данные актёра:");
+            Console.WriteLine("Current actor data:");
             PrintActor(actor);
 
             while (true)
             {
-                Console.WriteLine("Что хотите изменить?");
-                Console.WriteLine("1 - ФИО,\n2 - Страну,\n3 - Дату рождения,\n0 - Выход,");
-                int choice = EnterInt("Введите: ");
+                Console.WriteLine("What do you want to change?");
+                Console.WriteLine("1 - Full Name,\n2 - Country,\n3 - Birth Date,\n0 - Exit,");
+                int choice = EnterInt("Enter: ");
                 if (choice == 0)
                     break;
 
                 UpdateActorSwitch(actor, choice, repo);
                 Console.Clear();
-                Console.WriteLine("Изменение выполнено!");
-                Console.WriteLine("Обновлённые данные актёра:");
+                Console.WriteLine("Changes have been made!");
+                Console.WriteLine("Updated actor data:");
                 PrintActor(actor);
             }
             repo.UpdateActor(actor);
@@ -881,19 +888,19 @@ namespace Final_Pr
             switch (choice)
             {
                 case 1:
-                    actor.FullName = EnterString("Новое ФИО: ");
+                    actor.FullName = EnterString("New Full Name: ");
                     break;
 
                 case 2:
-                    actor.Country = EnterString("Новая страна: ");
+                    actor.Country = EnterString("New Country: ");
                     break;
 
                 case 3:
-                    actor.BirthDate = EnterDate("Новая дата рождения (дд.мм.гггг): ");
+                    actor.BirthDate = EnterDate("New Birth Date (dd.mm.yyyy): ");
                     break;
 
                 default:
-                    Console.WriteLine("Ошибка ввода!");
+                    Console.WriteLine("Input error!");
                     break;
             }
         }
@@ -904,16 +911,16 @@ namespace Final_Pr
         public void Menu_ActorRoles(Repository repo)
         {
             Console.Clear();
-            Console.WriteLine("  --- Актеры / Роли ---");
+            Console.WriteLine("  --- Actors / Roles ---");
 
-            string fullName = EnterString("Введите ФИО актёра: ");
-            string country = EnterString("Введите страну актёра: ");
-            DateTime birth = EnterDate("Введите дату рождения (дд.мм.гггг): ");
+            string fullName = EnterString("Enter actor's full name: ");
+            string country = EnterString("Enter country: ");
+            DateTime birth = EnterDate("Enter birth date (dd.mm.yyyy): ");
 
             var actor = repo.GetActorByDetails(fullName, country, birth);
             if (actor == null)
             {
-                Console.WriteLine("Актёр не найден!");
+                Console.WriteLine("Actor not found!");
                 ReadKey();
                 return;
             }
@@ -923,9 +930,9 @@ namespace Final_Pr
                 var roles = repo.GetRolesByActor(actor.Id);
                 PrintActorRoles(roles);
 
-                Console.WriteLine("1 - Удалить роль / отвязать роль,\n2 - Удалить ВСЕ роли,\n3 - Добавить роль актеру,\n4 - Вывести все роли всех актеров,\n0 - Выход");
+                Console.WriteLine("1 - Remove role / Unlink role,\n2 - Remove ALL roles,\n3 - Add role to actor,\n4 - Show all roles of all actors,\n0 - Exit");
 
-                int choice = EnterInt("Введите: ");
+                int choice = EnterInt("Enter: ");
                 switch (choice)
                 {
                     case 0:
@@ -954,7 +961,7 @@ namespace Final_Pr
                         break;
 
                     default:
-                        Console.WriteLine("Ошибка выбора!");
+                        Console.WriteLine("Input error!");
                         break;
                 }
                 
@@ -964,40 +971,40 @@ namespace Final_Pr
         {
             if (roles == null || roles.Count == 0)
             {
-                Console.WriteLine("У актёра нет ролей.");
+                Console.WriteLine("Actor has no roles.");
                 return;
             }
 
-            Console.WriteLine("Введите данные роли для удаления:");
+            Console.WriteLine("Enter role details to delete:");
 
-            string character = EnterString("Персонаж: ");
+            string character = EnterString("Character: ");
             string type = EnterRoleType();
-            string filmTitle = EnterString("Название фильма: ");
+            string filmTitle = EnterString("Film title: ");
 
             var role = roles.FirstOrDefault(r => r.Character == character && r.Type == type && r.Film != null && r.Film.Title == filmTitle);
             if (role == null)
             {
-                Console.WriteLine("Роль не найдена у данного актёра!");
+                Console.WriteLine("Role not found for this actor!");
                 return;
             }
 
-            string ans = EnterString("Удалить роль полностью или отвязать от актёра? (delete/unlink): ").ToLower();
+            string ans = EnterString("Delete role completely or unlink from actor? (delete/unlink): ").ToLower();
 
             if (ans == "delete")
             {
                 repo.RemoveRole(role.Id);
-                Console.WriteLine("Роль удалена полностью!");
+                Console.WriteLine("Role deleted completely!");
                 ReadKey();
             }
             else if (ans == "unlink")
             {
                 repo.UpdateRoleActor(role.Id, null);
-                Console.WriteLine("Роль отвязана от актёра!");
+                Console.WriteLine("Role unlinked from actor!");
                 ReadKey();
             }
             else
             {
-                Console.WriteLine("Действие не распознано.");
+                Console.WriteLine("Action not recognized.");
                 ReadKey();
             }
         }
@@ -1005,12 +1012,12 @@ namespace Final_Pr
         {
             if (roles == null || roles.Count == 0)
             {
-                Console.WriteLine("У актёра нет ролей.");
+                Console.WriteLine("Actor has no roles.");
                 return;
             }
 
-            string ans = EnterString("Удалить все роли полностью или отвязать их от актёра? (delete/unlink): ").ToLower();
-            
+            string ans = EnterString("Delete all roles completely or unlink from actor? (delete/unlink): ").ToLower();
+
             foreach (var role in roles)
             {
                 if (ans == "delete")
@@ -1020,28 +1027,28 @@ namespace Final_Pr
             }
 
             if (ans == "delete")
-                Console.WriteLine("Все роли удалены полностью!");
+                Console.WriteLine("All roles deleted completely!");
             else if (ans == "unlink")
-                Console.WriteLine("Все роли отвязаны от актёра!");
+                Console.WriteLine("All roles unlinked from actor!");
             else
-                Console.WriteLine("Действие не распознано.");
+                Console.WriteLine("Action not recognized.");
             ReadKey();
         }
         private void PrintActorRoles(List<Role> roles)
         {
             Console.Clear();
-            Console.WriteLine("   --- Роли актёра ---");
+            Console.WriteLine("   --- Actor roles ---");
 
             if (roles == null || roles.Count == 0)
             {
-                Console.WriteLine("Ролей нет.");
+                Console.WriteLine("No roles found.");
                 return;
             }
 
             foreach (var r in roles)
             {
                 Console.WriteLine(
-                    $"Персонаж: {r.Character} - Тип: {r.Type} - Фильм: {r.Film?.Title}"
+                    $"Character: {r.Character} - Type: {r.Type} - Film: {r.Film?.Title}"
                 );
             }
             ReadKey();
@@ -1049,31 +1056,31 @@ namespace Final_Pr
         public void PrintAllActorsRoles(Repository repo)
         {
             Console.Clear();
-            Console.WriteLine("   --- Все роли всех актёров ---");
+            Console.WriteLine("   --- All roles of all actors ---");
 
             var actors = repo.GetAllActors();
 
             if (actors == null || actors.Count == 0)
             {
-                Console.WriteLine("Актёров нет в базе.");
+                Console.WriteLine("No actors found.");
                 return;
             }
 
             foreach (var actor in actors)
             {
-                Console.WriteLine($"Актёр: {actor.FullName}, Страна: {actor.Country}, Дата рождения: {actor.BirthDate.ToShortDateString()}");
+                Console.WriteLine($"Actor: {actor.FullName}, Country: {actor.Country}, Birth Date: {actor.BirthDate.ToShortDateString()}");
 
                 var roles = actor.Roles;
                 if (roles != null && roles.Count > 0)
                 {
                     foreach (var r in roles)
                     {
-                        Console.WriteLine($"  - Роль: {r.Character} - Тип: {r.Type} - Фильм: {r.Film?.Title}");
+                        Console.WriteLine($"  - Role: {r.Character} - Type: {r.Type} - Film: {r.Film?.Title}");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("  Ролей нет.");
+                    Console.WriteLine("  No roles found.");
                 }
 
                 Console.WriteLine("");
@@ -1081,14 +1088,14 @@ namespace Final_Pr
         }
 
 
-        //2.6 - Другое(Топ-10 популярных актёров, Актеры с наибольшим числом ролей, Поиск актеров по фильму)
+        //2.6 - Other (Top 10 popular actors, Actors with the most roles, Search actors by movie)
         public void Menu_OtherActors(Repository repo)
         {
             var actors = repo.GetAllActors();
 
             if (actors.Count == 0)
             {
-                Console.WriteLine("Актёров нет в базе.");
+                Console.WriteLine("No actors found.");
                 ReadKey();
                 return;
             }
@@ -1096,9 +1103,9 @@ namespace Final_Pr
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("   --- Другое (Актёры) ---");
-                Console.WriteLine("1 - Актёр с наибольшим числом ролей,\n2 - Актёры из конкретного фильма,\n3 - Случайный актёр,\n0 - Выход");
-                int choice = EnterInt("Выберите опцию: ");
+                Console.WriteLine("   --- Other (Actors) ---");
+                Console.WriteLine("1 - Actor with the most roles,\n2 - Actors from a specific movie,\n3 - Random actor,\n0 - Exit");
+                int choice = EnterInt("Select an option: ");
                 if (choice == 0) break;
 
                 Menu_OtherActorsSwitch(choice, actors, repo);
@@ -1129,17 +1136,17 @@ namespace Final_Pr
 
                     if (topActor != null)
                     {
-                        Console.WriteLine($"Актёр с наибольшим числом ролей: {topActor.FullName} ({topActor.Country}) - {maxRoles} ролей");
+                        Console.WriteLine($"Actor with the most roles: {topActor.FullName} ({topActor.Country}) - {maxRoles} roles");
                     }
                     else
                     {
-                        Console.WriteLine("Ролей ни у одного актёра нет.");
+                        Console.WriteLine("No roles found for any actor.");
                     }
                     break;
 
                 case 2:
-                    string Title = EnterString("Название фильма: ");
-                    int Year = EnterInt("Год выпуска фильма: ");
+                    string Title = EnterString("Film title: ");
+                    int Year = EnterInt("Film release year: ");
 
                     var actorsInFilm = new List<Actor>();
                     foreach (var a in actors)
@@ -1159,25 +1166,25 @@ namespace Final_Pr
 
                     if (actorsInFilm.Count > 0)
                     {
-                        Console.WriteLine($"Актёры, участвовавшие в фильме '{Title}' ({Year}):");
+                        Console.WriteLine($"Actors who participated in the film '{Title}' ({Year}):");
                         foreach (var a in actorsInFilm)
                             Console.WriteLine($" - {a.FullName} ({a.Country})");
                     }
                     else
                     {
-                        Console.WriteLine("Актёров в этом фильме не найдено.");
+                        Console.WriteLine("No actors found in this film.");
                     }
                     break;
 
                 case 3:
                     Random rnd = new Random();
                     var actorRandom = actors[rnd.Next(actors.Count)];
-                    Console.WriteLine("Случайный актёр:");
-                    Console.WriteLine($"{actorRandom.FullName} ({actorRandom.Country}) - Дата рождения: {actorRandom.BirthDate.ToShortDateString()}");
+                    Console.WriteLine("Random actor:");
+                    Console.WriteLine($"{actorRandom.FullName} ({actorRandom.Country}) - Birth date: {actorRandom.BirthDate.ToShortDateString()}");
                     break;
 
                 default:
-                    Console.WriteLine("Ошибка! Выберите корректный пункт.");
+                    Console.WriteLine("Error! Please select a valid option.");
                     break;
             }
             ReadKey();
@@ -1185,7 +1192,7 @@ namespace Final_Pr
 
 
 
-        //3.1 - Показать отзывы к фильму
+        //3.1 - Show reviews for a film
         public void Menu_ShowAllReviewsToFilm(Repository repo)
         {
             Film film = SelectFilm(repo);
@@ -1193,12 +1200,12 @@ namespace Final_Pr
 
             if (film.Reviews == null || film.Reviews.Count == 0)
             {
-                Console.WriteLine("Отзывы отсутствуют.");
+                Console.WriteLine("No reviews found.");
                 ReadKey();
                 return;
             }
 
-            Console.WriteLine($"Отзывы к фильму '{film.Title}' ({film.Year}):");
+            Console.WriteLine($"Reviews for the film '{film.Title}' ({film.Year}):");
             foreach (var r in film.Reviews)
             {
                 string userName;
@@ -1208,9 +1215,9 @@ namespace Final_Pr
                 }
                 else
                 {
-                    userName = "Неизвестный";
+                    userName = "Unknown";
                 }
-                Console.WriteLine($"- Пользователь: {userName}, Оценка: {r.Rating}/10, Комментарий: {r.Comment}, Дата: {r.Date.ToShortDateString()}");
+                Console.WriteLine($"- User: {userName}, Rating: {r.Rating}/10, Comment: {r.Comment}, Date: {r.Date.ToShortDateString()}");
             }
             ReadKey();
         }
@@ -1218,15 +1225,15 @@ namespace Final_Pr
         {
             while (true)
             {
-                string title = EnterString("Название фильма (или '0' для выхода): ");
+                string title = EnterString("Film title (or '0' to exit): ");
                 if (title == "0") return null;
 
-                int year = EnterInt("Год выпуска фильма: ");
+                int year = EnterInt("Film release year: ");
                 Film film = repo.GetAllFilms().FirstOrDefault(f => f.Title == title && f.Year == year);
 
                 if (film == null)
                 {
-                    Console.WriteLine("Фильм не найден.");
+                    Console.WriteLine("Film not found.");
                     ReadKey();
                     continue;
                 }
@@ -1246,8 +1253,8 @@ namespace Final_Pr
                 User user = LoginOrRegisterUser(repo);
                 if (user == null) return;
 
-                int rating = EnterInt("Оценка (1-10): ");
-                string comment = EnterString("Комментарий: ");
+                int rating = EnterInt("Rating (1-10): ");
+                string comment = EnterString("Comment: ");
                 DateTime date = DateTime.Now;
 
                 Review review = new Review
@@ -1262,9 +1269,9 @@ namespace Final_Pr
                 };
 
                 repo.AddReview(review);
-                Console.WriteLine("Отзыв успешно добавлен!");
+                Console.WriteLine("Review added successfully!");
 
-                string addMore = EnterString("Хотите добавить ещё один отзыв? (y/n): ").ToLower();
+                string addMore = EnterString("Do you want to add another review? (y/n): ").ToLower();
                 if (addMore != "y")
                     break;
             }
@@ -1274,39 +1281,39 @@ namespace Final_Pr
         {
             while (true)
             {
-                string userName = EnterString("Имя пользователя (или '0' для выхода): ");
+                string userName = EnterString("User name (or '0' to exit): ");
                 if (userName == "0") return null;
                 User user = repo.GetAllUsers().FirstOrDefault(u => u.Name == userName);
 
                 if (user != null)
                 {
-                    string password = EnterString("Введите пароль: ");
+                    string password = EnterString("Enter password: ");
                     if (user.Password == password)
                         return user;
 
-                    Console.WriteLine("Неверный пароль! Попробуйте снова.");
+                    Console.WriteLine("Incorrect password! Please try again.");
                     ReadKey();
                 }
                 else
                 {
-                    Console.WriteLine("Пользователь не найден. Создаём нового.");
-                    string password = EnterString("Задайте пароль: ");
-                    string email = EnterString("Задайте email: ");
+                    Console.WriteLine("User not found. Creating a new one.");
+                    string password = EnterString("Set password: ");
+                    string email = EnterString("Set email: ");
                     user = repo.AddUser(new User
                     {
                         Name = userName,
                         Password = password,
                         Email = email
                     });
-                    Console.WriteLine("Пользователь создан!");
+                    Console.WriteLine("User created successfully!");
                     ReadKey();
                     return user;
                 }
             }
         }
-        
 
-        //3.3 - Удалить отзыв
+
+        //3.3 - Delete review
         public void Menu_DeleteReview(Repository repo)
         {
             Film film = SelectFilm(repo);
@@ -1320,28 +1327,28 @@ namespace Final_Pr
                 var userReviews = film.Reviews.Where(r => r.UserId == User.Id).ToList();
                 if (userReviews.Count == 0)
                 {
-                    Console.WriteLine("У вас нет отзывов для этого фильма.");
+                    Console.WriteLine("You have no reviews for this movie.");
                     return;
                 }
 
-                Console.WriteLine("Ваши отзывы к этому фильму:");
+                Console.WriteLine("Your reviews for this movie:");
                 foreach (var r in userReviews)
                 {
-                    Console.WriteLine($"Id: {r.Id}, Оценка: {r.Rating}/10, Комментарий: {r.Comment}");
+                    Console.WriteLine($"Id: {r.Id}, Rating: {r.Rating}/10, Comment: {r.Comment}");
                 }
 
-                int Id = EnterInt("Введите Id отзыва для удаления: ");
+                int Id = EnterInt("Enter review Id to delete: ");
                 Review review = userReviews.FirstOrDefault(r => r.Id == Id);
                 if (review == null)
                 {
-                    Console.WriteLine("Отзыв не найден.");
+                    Console.WriteLine("Review not found.");
                     return;
                 }
 
                 repo.RemoveReview(review.Id);
-                Console.WriteLine("Отзыв удалён.");
+                Console.WriteLine("Review deleted successfully.");
 
-                string cont = EnterString("Хотите удалить ещё один отзыв? (y/n): ").ToLower();
+                string cont = EnterString("Do you want to delete another review? (y/n): ").ToLower();
                 if (cont != "y") break;
 
                 ReadKey();
@@ -1363,21 +1370,21 @@ namespace Final_Pr
                 var userReviews = film.Reviews.Where(r => r.UserId == User.Id).ToList();
                 if (userReviews.Count == 0)
                 {
-                    Console.WriteLine("У вас нет отзывов для этого фильма.");
+                    Console.WriteLine("You have no reviews for this movie.");
                     return;
                 }
 
-                Console.WriteLine("Ваши отзывы к этому фильму:");
+                Console.WriteLine("Your reviews for this movie:");
                 foreach (var r in userReviews)
                 {
-                    Console.WriteLine($"Id: {r.Id}, Оценка: {r.Rating}/10, Комментарий: {r.Comment}");
+                    Console.WriteLine($"Id: {r.Id}, Rating: {r.Rating}/10, Comment: {r.Comment}");
                 }
 
-                int reviewId = EnterInt("Введите Id отзыва для изменения: ");
+                int reviewId = EnterInt("Enter review Id to update: ");
                 Review review = userReviews.FirstOrDefault(r => r.Id == reviewId);
                 if (review == null)
                 {
-                    Console.WriteLine("Отзыв не найден.");
+                    Console.WriteLine("Review not found.");
                     return;
                 }
 
@@ -1385,33 +1392,33 @@ namespace Final_Pr
                 while (editMore)
                 {
                     Console.Clear();
-                    Console.WriteLine("\nЧто хотите изменить?");
-                    Console.WriteLine("1 - Оценку,\n2 - Комментарий,\n3 - Фильм\n0 - Выход");
-                    int choice = EnterInt("Введите: ");
+                    Console.WriteLine("\nWhat do you want to change?");
+                    Console.WriteLine("1 - Rating,\n2 - Comment,\n3 - Film\n0 - Exit");
+                    int choice = EnterInt("Enter: ");
 
                     switch (choice)
                     {
                         case 1:
-                            review.Rating = EnterInt("Новая оценка (1-10): ");
+                            review.Rating = EnterInt("New rating (1-10): ");
                             review.Date = DateTime.Now;
                             repo.UpdateReview(review);
-                            Console.WriteLine("Оценка обновлена!");
+                            Console.WriteLine("Rating updated!");
                             break;
 
                         case 2:
-                            review.Comment = EnterString("Новый комментарий: ");
+                            review.Comment = EnterString("New comment: ");
                             review.Date = DateTime.Now;
                             repo.UpdateReview(review);
-                            Console.WriteLine("Комментарий обновлён!");
+                            Console.WriteLine("Comment updated!");
                             break;
 
                         case 3:
-                            Console.WriteLine("Список доступных фильмов:");
+                            Console.WriteLine("List of available films:");
                             var allFilms = repo.GetAllFilms();
                             foreach (var f in allFilms)
                                 PrintFilms(f);
 
-                            int newFilmId = EnterInt("Введите Id нового фильма для отзыва: ");
+                            int newFilmId = EnterInt("Enter Id of the new film for the review: ");
                             Film newFilm = allFilms.FirstOrDefault(f => f.Id == newFilmId);
 
                             if (newFilm != null)
@@ -1420,11 +1427,11 @@ namespace Final_Pr
                                 review.Film = newFilm;
                                 review.Date = DateTime.Now;
                                 repo.UpdateReview(review);
-                                Console.WriteLine($"Отзыв перенесён на фильм: {newFilm.Title} ({newFilm.Year})");
+                                Console.WriteLine($"Review moved to film: {newFilm.Title} ({newFilm.Year})");
                             }
                             else
                             {
-                                Console.WriteLine("Фильм не найден.");
+                                Console.WriteLine("Film not found.");
                             }
                             break;
 
@@ -1433,13 +1440,13 @@ namespace Final_Pr
                             break;
 
                         default:
-                            Console.WriteLine("Неверный выбор.");
+                            Console.WriteLine("Invalid choice.");
                             break;
                     }
                     ReadKey();
                 }
 
-                string cont = EnterString("Хотите редактировать ещё один отзыв? (y/n): ").ToLower();
+                string cont = EnterString("Do you want to edit another review? (y/n): ").ToLower();
                 if (cont != "y") break;
                 ReadKey();
             }
